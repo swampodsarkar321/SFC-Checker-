@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SFC TICKET CHECKER",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "SFC TICKET CHECKER — Packzy customer reply tracking and response-time alerts by MD SWAMPOD SARKAR.",
   "permissions": [
     "storage",

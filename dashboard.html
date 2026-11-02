@@ -97,13 +97,13 @@
 
   <section class="reply-section leaderboard-section" data-view="leaderboard" id="sec-leaderboard">
     <div class="reply-section-head">
-      <div class="section-title"><span class="section-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8m-4-4v4M5 4h14v9a7 7 0 0 1-14 0V4Z"/><path d="M5 7H3v2a4 4 0 0 0 4 4m12-6h2v2a4 4 0 0 1-4 4"/></svg></span><span><h2>Agent Leaderboard</h2><small>Rating, ticket volume and average response time</small></span></div>
+      <div class="section-title"><span class="section-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8m-4-4v4M5 4h14v9a7 7 0 0 1-14 0V4Z"/><path d="M5 7H3v2a4 4 0 0 0 4 4m12-6h2v2a4 4 0 0 1-4 4"/></svg></span><span><h2>Agent Leaderboard</h2><small>Rating, satisfaction and ticket volume</small></span></div>
       <button id="refreshLeaderboard" class="btn" type="button">Refresh</button>
     </div>
     <p id="leaderboardSyncStatus" class="leaderboard-status" aria-live="polite">Loading Firebase leaderboard…</p>
     <div class="table-wrap">
       <table class="reply-table leaderboard-table">
-        <thead><tr><th>Rank</th><th>Agent name</th><th>Rating</th><th>Total tickets</th><th>Average response time</th></tr></thead>
+        <thead><tr><th>Rank</th><th>Agent name</th><th>Rating</th><th>Satisfaction</th><th>Total tickets</th></tr></thead>
         <tbody id="leaderboardBody"></tbody>
       </table>
       <div id="leaderboardEmpty" class="empty">No agent stats have been synced yet.</div>

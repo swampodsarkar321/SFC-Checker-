@@ -95,19 +95,16 @@ function getLeaderboardEntry(data) {
     ? tickets.filter((ticket) => !ticket.assignedTo ||
         String(ticket.assignedTo).toLowerCase().includes(name.toLowerCase()))
     : tickets;
-  const responseTimes = assignedTickets
-    .filter((ticket) => ticket.lastResponseDelayMs != null &&
-      Number.isFinite(Number(ticket.lastResponseDelayMs)) && Number(ticket.lastResponseDelayMs) >= 0)
-    .map((ticket) => Number(ticket.lastResponseDelayMs));
-  const rating = Number(data.ratingSummary?.myRating);
+  const ratingValue = data.ratingSummary?.myRating;
+  const rating = ratingValue == null || ratingValue === "" ? null : Number(ratingValue);
+  const satisfactionValue = data.ratingSummary?.satisfiedPct;
+  const satisfaction = satisfactionValue == null || satisfactionValue === "" ? null : Number(satisfactionValue);
 
   return {
     agentName: name,
     rating: Number.isFinite(rating) ? rating : null,
+    satisfactionPct: Number.isFinite(satisfaction) ? satisfaction : null,
     totalTickets: assignedTickets.length,
-    averageResponseTimeMs: responseTimes.length
-      ? Math.round(responseTimes.reduce((total, delay) => total + delay, 0) / responseTimes.length)
-      : null,
     updatedAt: Date.now()
   };
 }

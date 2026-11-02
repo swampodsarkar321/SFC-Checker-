@@ -161,14 +161,6 @@ async function load() {
   try { render(); } catch (e) { console.error("[MRT Dashboard] render error:", e); }
 }
 
-function formatResponseTime(milliseconds) {
-  if (milliseconds == null || !Number.isFinite(Number(milliseconds)) || Number(milliseconds) < 0) return "—";
-  const minutes = Number(milliseconds) / 60000;
-  if (minutes < 1) return `${Math.max(1, Math.round(minutes * 60))} sec`;
-  if (minutes < 60) return `${minutes.toFixed(1)} min`;
-  return `${(minutes / 60).toFixed(1)} h`;
-}
-
 async function loadLeaderboard() {
   const statusEl = $("leaderboardSyncStatus");
   if (statusEl && !leaderboardEntries.length) statusEl.textContent = "Loading Firebase leaderboard…";
@@ -183,26 +175,39 @@ async function loadLeaderboard() {
   renderLeaderboard();
 }
 
+function sortLeaderboardEntries(entries) {
+  return entries.slice().sort((a, b) => {
+    const ratingA = a.rating != null && Number.isFinite(Number(a.rating))
+      ? Math.round(Number(a.rating) * 10) / 10
+      : -1;
+    const ratingB = b.rating != null && Number.isFinite(Number(b.rating))
+      ? Math.round(Number(b.rating) * 10) / 10
+      : -1;
+    const satisfactionA = a.satisfactionPct != null && Number.isFinite(Number(a.satisfactionPct))
+      ? Number(a.satisfactionPct)
+      : -1;
+    const satisfactionB = b.satisfactionPct != null && Number.isFinite(Number(b.satisfactionPct))
+      ? Number(b.satisfactionPct)
+      : -1;
+    return ratingB - ratingA ||
+      satisfactionB - satisfactionA ||
+      Number(b.totalTickets || 0) - Number(a.totalTickets || 0);
+  });
+}
+
 function renderLeaderboard() {
   const body = $("leaderboardBody");
   const empty = $("leaderboardEmpty");
   const status = $("leaderboardSyncStatus");
   if (!body || !empty || !status) return;
-  const entries = leaderboardEntries.slice().sort((a, b) => {
-    const ratingA = a.rating != null && Number.isFinite(Number(a.rating)) ? Number(a.rating) : -1;
-    const ratingB = b.rating != null && Number.isFinite(Number(b.rating)) ? Number(b.rating) : -1;
-    return ratingB - ratingA ||
-      Number(b.totalTickets || 0) - Number(a.totalTickets || 0) ||
-      (a.averageResponseTimeMs != null ? Number(a.averageResponseTimeMs) : Number.MAX_SAFE_INTEGER) -
-        (b.averageResponseTimeMs != null ? Number(b.averageResponseTimeMs) : Number.MAX_SAFE_INTEGER);
-  });
+  const entries = sortLeaderboardEntries(leaderboardEntries);
   body.innerHTML = entries.map((entry, index) => `
     <tr>
       <td>${index + 1}</td>
       <td>${esc(entry.agentName || "Agent")}</td>
       <td>${entry.rating != null && Number.isFinite(Number(entry.rating)) ? `★ ${esc(Number(entry.rating).toFixed(1))}` : "—"}</td>
+      <td>${entry.satisfactionPct != null && Number.isFinite(Number(entry.satisfactionPct)) ? `${esc(Number(entry.satisfactionPct))}%` : "—"}</td>
       <td>${esc(Number(entry.totalTickets) || 0)}</td>
-      <td>${esc(formatResponseTime(entry.averageResponseTimeMs))}</td>
     </tr>`).join("");
   empty.style.display = entries.length ? "none" : "block";
   empty.textContent = leaderboardError

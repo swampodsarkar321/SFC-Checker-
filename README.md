@@ -45,7 +45,7 @@ Live progress: `87/200 . 43% . 113 left`
 The **Dashboard** button opens a full page with:
 - Missed / Snoozed / Tracked / Late cards
 - Tickets filter for assigned-to-you tickets with no agent reply after the configured reminder threshold
-- Agent leaderboard with rating, total tracked tickets and average recorded response time
+- Agent leaderboard ranked by rating, then satisfaction percentage, then total tracked tickets
 - Unified worklist of all tracked tickets; snooze/unsnooze and star from each row; Starred filter
 - Last scan time, listed/checked/skipped/failed counts and whether pagination completed
 - New customer reply notification history: customer name, message, time ago
@@ -91,7 +91,7 @@ Create a Realtime Database and use these rules to keep each agent's extension da
 }
 ```
 
-The extension syncs its local settings, tickets, scan results, and notification/rating history to that anonymous account. On the Packzy **My tickets/Mine** scope, it detects the signed-in agent from the ticket's Assigned field and saves that name automatically. The leaderboard publishes only the agent name, Packzy rating, tracked-ticket count, and average recorded response time; other agents' ticket/customer data is not published. Leaderboard data refreshes every 30 seconds and displays a single row for names that match ignoring case and repeated spaces; if multiple installations use the same agent name, the most recently updated row is shown. Anonymous accounts are installation-specific, so reinstalling the extension or using another browser creates a separate account in Firebase, although duplicate matching names are collapsed in the leaderboard display.
+The extension syncs its local settings, tickets, scan results, and notification/rating history to that anonymous account. On the Packzy **My tickets/Mine** scope, it detects the signed-in agent from the ticket's Assigned field and saves that name automatically. The leaderboard publishes only the agent name, Packzy rating, satisfaction percentage, and tracked-ticket count; other agents' ticket/customer data is not published. Entries rank by rating first, satisfaction percentage next, and ticket count as the final tie-breaker. Leaderboard data refreshes every 30 seconds and displays a single row for names that match ignoring case and repeated spaces; if multiple installations use the same agent name, the most recently updated row is shown. Anonymous accounts are installation-specific, so reinstalling the extension or using another browser creates a separate account in Firebase, although duplicate matching names are collapsed in the leaderboard display.
 
 The website counts download-button clicks in `websiteDownloadEvents` using Firebase Anonymous Authentication. The counter aggregates event records; it counts clicks, not confirmed completed downloads. Apply the rules above to the same Realtime Database used by the extension for the count to load and accept events.
 
